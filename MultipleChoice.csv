@@ -1,1 +1,12 @@
-questionId,answerOption,isAnswer,hint782,"To pledge your loyalty to the Sovereign, Queen Elizabeth II",TRUE,782,To pledge your allegiance to the flag and fulfill the duties of a Canadian,FALSE,782,To pledge your allegiance to the flag and fulfill the duties of a Canadian,FALSE,Think regally.782,To pledge your loyalty to Canada from sea to sea,FALSE,625,The first railway to cross Canada,FALSE,"The Underground Railroad was generally south to north, not east-west"625,The CPR's secret railway line,FALSE,"The Underground Railroad was secret, but it had nothing to do with trains"625,The TTC subway system,FALSE,The TTC is relatively recent; the Underground Railroad was  in operation over 100 years ago.625,A network used by slaves who escaped the United States into Canada,TRUE,790,They attacked American merchant ships,FALSE,790," They expanded their defence system, including Fort York",FALSE,790,"They burned down the White House in Washington D.C.   They captured Niagara Falls",TRUE,
+questionId,answerOption,isAnswer,hint
+782,"To pledge your loyalty to the Sovereign, Queen Elizabeth II",TRUE,
+782,"To pledge your allegiance to the flag and fulfill the duties of a Canadian",FALSE,"Think regally."
+782,"To pledge your loyalty to Canada from sea to sea",FALSE,
+625,"The first railway to cross Canada,FALSE,"The Underground Railroad was generally south to north, not east-west"
+625,"The CPR's secret railway line",FALSE,"The Underground Railroad was secret, but it had nothing to do with trains"
+625,"The TTC subway system",FALSE,"The TTC is relatively recent; the Underground Railroad was  in operation over 100 years ago."
+625,"A network used by slaves who escaped the United States into Canada",TRUE,
+790,"They attacked American merchant ships",FALSE,
+790,"They expanded their defence system, including Fort York",FALSE,
+790,"They burned down the White House in Washington D.C.",True,
+790,"They captured Niagara Falls",False,
