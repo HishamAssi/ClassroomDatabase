@@ -1,0 +1,5 @@
+questionId,startRange,endRange,isAnswer,hint
+601,1960,1960,True
+601,1800,1900,False,'The Quiet Revolution happened during the 20th'
+601,2000,2010,False,'The Quiet Revolution happened some time ago.'
+601,2020,3000,False,'The Quiet Revolution has already happened!'
