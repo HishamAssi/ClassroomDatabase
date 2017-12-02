@@ -10,7 +10,7 @@ CREATE TABLE student(
 
 
 CREATE TABLE class(
-    c_id INT PRIMARY KEY AUTO_INCREMENT,
+    c_id INT PRIMARY KEY,
     room varchar(255) NOT NULL,
     grade varchar(255) NOT NULL,
     teacher varchar(255) NOT NULL,
