@@ -2,11 +2,10 @@ drop schema if exists quizschema cascade;
 create schema quizschema;
 set search_path to quizschema;
 
--- 
 CREATE TABLE student(
     s_id INT PRIMARY KEY,
     firstname varchar(255),
-    lastname varchar(255) NOT NULL,
+    lastname varchar(255) NOT NULL
 );
 
 
@@ -29,7 +28,7 @@ CREATE TABLE quiz(
     quizid TEXT PRIMARY KEY,
     title VARCHAR(255),
     q_timestamp TIMESTAMP NOT NULL,
-    isHint BOOLEAN NOT NULL,
+    isHint BOOLEAN NOT NULL
 );
 
 CREATE TABLE question(
