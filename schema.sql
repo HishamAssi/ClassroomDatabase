@@ -3,7 +3,7 @@ create schema quizschema;
 set search_path to quizschema;
 
 CREATE TABLE student(
-    s_id INT PRIMARY KEY,
+    s_id BIGINT PRIMARY KEY,
     firstname varchar(255),
     lastname varchar(255) NOT NULL
 );
@@ -18,8 +18,8 @@ CREATE TABLE class(
 );
 
 CREATE TABLE took(
-    s_id int REFERENCES student(s_id),
-    c_id int REFERENCES class(c_id),
+    s_id BIGINT REFERENCES student(s_id),
+    c_id INT REFERENCES class(c_id),
     PRIMARY KEY(s_id, c_id)
 );
 
@@ -72,7 +72,7 @@ CREATE TABLE StudentResponse(
     -- TODO: constrain student to only take quiz in a class they are in. 
     questionId INT REFERENCES question(questionId),
     quizid TEXT REFERENCES quiz(quizid),
-    s_id INT REFERENCES student(s_id),
+    s_id BIGINT REFERENCES student(s_id),
     -- TODO: answer for mcq lies within options.
     answer TEXT,
     questionType TEXT NOT NULL,
