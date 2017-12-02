@@ -71,7 +71,7 @@ CREATE TABLE true_false(
 CREATE TABLE StudentResponse(
     -- TODO: constrain student to only take quiz in a class they are in. 
     questionId INT REFERENCES question(questionId),
-    quizid INT REFERENCES quiz(quizid),
+    quizid TEXT REFERENCES quiz(quizid),
     s_id INT REFERENCES student(s_id),
     -- TODO: answer for mcq lies within options.
     answer TEXT,
