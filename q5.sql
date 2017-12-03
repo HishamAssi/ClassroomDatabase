@@ -22,75 +22,75 @@ WHERE class.grade='grade 8' AND class.room='room 120' AND class.teacher='Mr Higg
 -- (SELECT questions.questionId, answer AS realAnswer FROM questions
 -- JOIN true_false ON questions.questionId=true_false.questionId);
 
-CREATE VIEW studentResponsesForQuiz AS
+CREATE VIEW studentResponsesForQuizForQuiz AS
 SELECT questionId, students.s_id, answer, questionType FROM students
 JOIN studentResponse ON students.s_id=studentResponse.s_id
 WHERE quizid='Pr1-220310';
 
 CREATE VIEW numberCorrect_MCQ AS
-SELECT studentResponses.questionId, count(*) AS correctCount
-FROM studentResponses JOIN MultipleChoice
-ON studentResponses.questionId=MultipleChoice.questionId
+SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
+FROM studentResponsesForQuiz JOIN MultipleChoice
+ON studentResponsesForQuiz.questionId=MultipleChoice.questionId
 AND questionType='MCQ' AND isAnswer=True 
 AND answer=answerOption
-GROUP BY studentResponses.questionId;
+GROUP BY studentResponsesForQuiz.questionId;
 
 CREATE VIEW numberIncorrect_MCQ AS
-SELECT studentResponses.questionId, count(*) AS incorrectCount
-FROM studentResponses JOIN MultipleChoice
-ON studentResponses.questionId=MultipleChoice.questionId AND
+SELECT studentResponsesForQuiz.questionId, count(*) AS incorrectCount
+FROM studentResponsesForQuiz JOIN MultipleChoice
+ON studentResponsesForQuiz.questionId=MultipleChoice.questionId AND
 questionType='MCQ' AND isAnswer=False
 AND answer=answerOption
-GROUP BY studentResponses.questionId;
+GROUP BY studentResponsesForQuiz.questionId;
 
 CREATE VIEW numberNone_MCQ AS
 SELECT questionId, count(*) AS noneCount
-FROM studentResponses
+FROM studentResponsesForQuiz
 WHERE questionType='MCQ' AND (Answer IS NULL OR answer='no response given')
 GROUP BY questionId;
 
 CREATE VIEW numberCorrect_Numeric AS
-SELECT studentResponses.questionId, count(*) AS correctCount
-FROM studentResponses JOIN NumericQuestions
-ON studentResponses.questionId=NumericQuestions.questionId
+SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
+FROM studentResponsesForQuiz JOIN NumericQuestions
+ON studentResponsesForQuiz.questionId=NumericQuestions.questionId
 AND questionType='Numeric' AND isAnswer=True 
 AND cast(answer AS INT)=startRange
-GROUP BY studentResponses.questionId;
+GROUP BY studentResponsesForQuiz.questionId;
 
 CREATE VIEW numberIncorrect_Numeric AS
-SELECT studentResponses.questionId, count(*) AS incorrectCount
-FROM studentResponses JOIN NumericQuestions
-ON studentResponses.questionId=NumericQuestions.questionId AND
+SELECT studentResponsesForQuiz.questionId, count(*) AS incorrectCount
+FROM studentResponsesForQuiz JOIN NumericQuestions
+ON studentResponsesForQuiz.questionId=NumericQuestions.questionId AND
 questionType='Numeric' AND isAnswer=True AND answer!='no response given'
 AND cast(answer AS INT)!=startRange
-GROUP BY studentResponses.questionId;
+GROUP BY studentResponsesForQuiz.questionId;
 
 CREATE VIEW numberNone_Numeric AS
 SELECT questionId, count(*) AS noneCount
-FROM studentResponses
+FROM studentResponsesForQuiz
 WHERE questionType='Numeric' AND (Answer IS NULL OR answer='no response given')
 GROUP BY questionId;
 
 
 CREATE VIEW numberCorrect_tf AS
-SELECT studentResponses.questionId, count(*) AS correctCount
-FROM studentResponses JOIN true_false
-ON studentResponses.questionId=true_false.questionId
+SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
+FROM studentResponsesForQuiz JOIN true_false
+ON studentResponsesForQuiz.questionId=true_false.questionId
 AND questionType='TF' 
-AND cast(studentResponses.answer AS BOOLEAN)=true_false.answer
-GROUP BY studentResponses.questionId;
+AND cast(studentResponsesForQuiz.answer AS BOOLEAN)=true_false.answer
+GROUP BY studentResponsesForQuiz.questionId;
 
 CREATE VIEW numberIncorrect_tf AS
-SELECT studentResponses.questionId, count(*) AS incorrectCount
-FROM studentResponses JOIN true_false
-ON studentResponses.questionId=true_false.questionId AND
-questionType='TF' AND studentResponses.answer!='no response given'
-AND cast(studentResponses.answer AS BOOLEAN)!=true_false.answer
-GROUP BY studentResponses.questionId;
+SELECT studentResponsesForQuiz.questionId, count(*) AS incorrectCount
+FROM studentResponsesForQuiz JOIN true_false
+ON studentResponsesForQuiz.questionId=true_false.questionId AND
+questionType='TF' AND studentResponsesForQuiz.answer!='no response given'
+AND cast(studentResponsesForQuiz.answer AS BOOLEAN)!=true_false.answer
+GROUP BY studentResponsesForQuiz.questionId;
 
 CREATE VIEW numberNone_tf AS
 SELECT questionId, count(*) AS noneCount
-FROM studentResponses
+FROM studentResponsesForQuiz
 WHERE questionType='TF' AND (Answer IS NULL OR answer='no response given')
 GROUP BY questionId;
 
