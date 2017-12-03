@@ -68,7 +68,7 @@ CREATE TABLE true_false(
     answer BOOLEAN NOT NULL
 );
 
-CREATE TABLE StudentResponse(
+CREATE TABLE studentResponse(
     -- TODO: constrain student to only take quiz in a class they are in. 
     questionId INT REFERENCES question(questionId),
     quizid TEXT REFERENCES quiz(quizid),

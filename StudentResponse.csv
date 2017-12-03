@@ -1,21 +1,21 @@
 questionId,quizId,s_id,answer,questionType
-601,'Pr1-220310',998801234,1950,Numeric
-566,'Pr1-220310',998801234,FALSE,TF
-790,'Pr1-220310',998801234,"They expanded their defence system, including Fort York",MCQ
-625,'Pr1-220310',998801234,A network used by slaves who escaped the United States into Canada,MCQ
-601,'Pr1-220310',10784522,1960,Numeric
-566,'Pr1-220310',10784522,FALSE,TF
-790,'Pr1-220310',10784522,They burned down the White House in Washington D.C.,MCQ
-625,'Pr1-220310',10784522,A network used by slaves who escaped the United States into Canada,MCQ
-601,'Pr1-220310',997733991,1960,Numeric
-566,'Pr1-220310',997733991,TRUE,TF
-790,'Pr1-220310',997733991,They burned down the White House in Washington D.C.,MCQ
-625,'Pr1-220310',997733991,The CPR's secret railway line,MCQ
-601,'Pr1-220310',5555555555,,Numeric
-566,'Pr1-220310',5555555555,FALSE,TF
-790,'Pr1-220310',5555555555,   They captured Niagara Falls,MCQ
-625,'Pr1-220310',5555555555,   no response given,MCQ
-601,'Pr1-220310',1111111111,,Numeric
-566,'Pr1-220310',1111111111,,TF
-790,'Pr1-220310',1111111111,,MCQ
-625,'Pr1-220310',1111111111,,MCQ
+601,Pr1-220310,998801234,1950,Numeric
+566,Pr1-220310,998801234,FALSE,TF
+790,Pr1-220310,998801234,"They expanded their defence system, including Fort York",MCQ
+625,Pr1-220310,998801234,A network used by slaves who escaped the United States into Canada,MCQ
+601,Pr1-220310,10784522,1960,Numeric
+566,Pr1-220310,10784522,FALSE,TF
+790,Pr1-220310,10784522,They burned down the White House in Washington D.C.,MCQ
+625,Pr1-220310,10784522,A network used by slaves who escaped the United States into Canada,MCQ
+601,Pr1-220310,997733991,1960,Numeric
+566,Pr1-220310,997733991,TRUE,TF
+790,Pr1-220310,997733991,They burned down the White House in Washington D.C.,MCQ
+625,Pr1-220310,997733991,The CPR's secret railway line,MCQ
+601,Pr1-220310,5555555555,,Numeric
+566,Pr1-220310,5555555555,FALSE,TF
+790,Pr1-220310,5555555555,   They captured Niagara Falls,MCQ
+625,Pr1-220310,5555555555,   no response given,MCQ
+601,Pr1-220310,1111111111,,Numeric
+566,Pr1-220310,1111111111,,TF
+790,Pr1-220310,1111111111,,MCQ
+625,Pr1-220310,1111111111,,MCQ
