@@ -11,20 +11,20 @@ SELECT s_Id FROM took JOIN class ON took.c_id=class.c_id
 WHERE class.grade='grade 8' AND class.room='room 120' AND class.teacher='Mr Higgins';
 
 -- CREATE VIEW questionAnswers AS
--- (SELECT questions.questionId, answerOption AS realAnswer FROM questions
--- JOIN MultipleChoice ON questions.questionId=MultipleChoice.questionId
+-- (SELECT questionsForQuiz.questionId, answerOption AS realAnswer FROM questionsForQuiz
+-- JOIN MultipleChoice ON questionsForQuiz.questionId=MultipleChoice.questionId
 -- WHERE isAnswer=True) 
 -- UNION
--- (SELECT questions.questionId, startRange AS realAnswer FROM questions
--- JOIN NumericQuestions ON questions.questionId=NumericQuestions.questionId
+-- (SELECT questionsForQuiz.questionId, startRange AS realAnswer FROM questionsForQuiz
+-- JOIN NumericQuestions ON questionsForQuiz.questionId=NumericQuestions.questionId
 -- WHERE isAnswer=True)
 -- UNION
--- (SELECT questions.questionId, answer AS realAnswer FROM questions
--- JOIN true_false ON questions.questionId=true_false.questionId);
+-- (SELECT questionsForQuiz.questionId, answer AS realAnswer FROM questionsForQuiz
+-- JOIN true_false ON questionsForQuiz.questionId=true_false.questionId);
 
-CREATE VIEW studentResponsesForQuizForQuiz AS
-SELECT questionId, students.s_id, answer, questionType FROM students
-JOIN studentResponse ON students.s_id=studentResponse.s_id
+CREATE VIEW studentResponsesForQuiz AS
+SELECT questionId, studentsInGrade.s_id, answer, questionType FROM studentsInGrade
+JOIN studentResponse ON studentsInGrade.s_id=studentResponse.s_id
 WHERE quizid='Pr1-220310';
 
 CREATE VIEW numberCorrect_MCQ AS
