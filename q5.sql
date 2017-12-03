@@ -1,12 +1,12 @@
 SET SEARCH_PATH TO quizschema;
 
 
-CREATE VIEW questions AS
+CREATE VIEW questionsForQuiz AS
 SELECT includes.questionId, questionType FROM includes 
 JOIN question ON includes.questionId=question.questionId
 WHERE quizid='Pr1-220310';
 
-CREATE VIEW students AS
+CREATE VIEW studentsInGrade AS
 SELECT s_Id FROM took JOIN class ON took.c_id=class.c_id
 WHERE class.grade='grade 8' AND class.room='room 120' AND class.teacher='Mr Higgins';
 
@@ -22,7 +22,7 @@ WHERE class.grade='grade 8' AND class.room='room 120' AND class.teacher='Mr Higg
 -- (SELECT questions.questionId, answer AS realAnswer FROM questions
 -- JOIN true_false ON questions.questionId=true_false.questionId);
 
-CREATE VIEW studentResponses AS
+CREATE VIEW studentResponsesForQuiz AS
 SELECT questionId, students.s_id, answer, questionType FROM students
 JOIN studentResponse ON students.s_id=studentResponse.s_id
 WHERE quizid='Pr1-220310';
