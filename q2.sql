@@ -35,7 +35,7 @@ CREATE VIEW allCounts as
 	SELECT * FROM MCQHintCount)) AS allQuestions;
 
 CREATE VIEW countsWithText AS
-	SELECT  allCounts.questionId as questionId, questionText, hints 
+	SELECT  allCounts.questionId as questionId, LEFT(questionText, 50), hints 
 	FROM allCounts JOIN question on allCounts.questionId = question.questionId;
 
 INSERT into q2 (
