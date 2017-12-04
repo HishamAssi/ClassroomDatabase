@@ -13,7 +13,7 @@ JOIN studentResponse ON students.s_id=studentResponse.s_id
 WHERE quizid='Pr1-220310' AND answer IS NULL OR answer='no response given';
 
 CREATE VIEW allInfo AS
-SELECT s_id, studentResponses.questionId, LEFT(question.questionText, 50)
+SELECT s_id, studentResponses.questionId, LEFT(question.questionText, 50) AS questionText
 FROM studentResponses JOIN question 
 ON studentResponses.questionId=question.questionId;
 
