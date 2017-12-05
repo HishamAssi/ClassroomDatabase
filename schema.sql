@@ -8,17 +8,21 @@ set search_path to quizschema;
 
 
 CREATE TABLE student(
-    s_id varchar(10) PRIMARY KEY CHECK char_length(s_id) = 10,
-    firstname varchar(255),
-    lastname varchar(255) NOT NULL
+    -- We decided to make the s_id as a varchar so we can enforce
+    -- the 10 character constraint on the attribute.
+    s_id VARCHAR(10) PRIMARY KEY CHECK char_length(s_id) = 10,
+    -- The professor mentioned the rare scenario where smoeone may not
+    -- have a firstname so we allowed firstname to be null.
+    firstname VARCHAR(255),
+    lastname VARCHAR(255) NOT NULL
 );
 
 
 CREATE TABLE class(
     c_id SERIAL PRIMARY KEY,
-    room varchar(255) NOT NULL,
-    grade varchar(255) NOT NULL,
-    teacher varchar(255) NOT NULL,
+    room VARCHAR(255) NOT NULL,
+    grade VARCHAR(255) NOT NULL,
+    teacher VARCHAR(255) NOT NULL,
     -- There is a tradeoff between adding a constraint
     -- on maximum one teacher per room and the number
     -- of grades allowed in a room.
@@ -36,19 +40,22 @@ CREATE TABLE took(
 
 
 CREATE TABLE quiz(
-    quizid TEXT PRIMARY KEY,
+    quizid VARCHAR(255) PRIMARY KEY,
     c_Id INT REFERENCES took(c_id),
     title VARCHAR(255),
     q_timestamp TIMESTAMP NOT NULL,
     isHint BOOLEAN NOT NULL
 );
 
+-- Created a type for the question types so we
+-- dont have varying versions of them.
+-- i.e. MCQ vs MultipleChoice.
 CREATE TYPE question_type AS ENUM(
 	'MCQ', 'Numeric', 'TF');
 
 CREATE TABLE question(
     questionId INT PRIMARY KEY,
-    questionText TEXT NOT NULL,
+    questionText VARCHAR(255) NOT NULL,
     questionType question_type NOT NULL
 );
 
@@ -57,48 +64,76 @@ CREATE TABLE includes(
     -- quizId is a subset of the quiz(quizId) so it might
     -- be that quiz does not include any questions if it
     -- does not exist in this table.
-    quizid TEXT REFERENCES quiz(quizid),
+    quizid VARCHAR(255) REFERENCES quiz(quizid),
     questionid INT REFERENCES question(questionid),
     q_weight INT NOT NULL,
     PRIMARY KEY(quizid, questionid)
 );
 
-
+-- It might be better to keep the hints in the same table as MultipleChoice
+-- but for the since this assignment does not allow us to have nulls,
+-- we have to split the hints into a different table.
 CREATE TABLE MultipleChoice(
     questionId INT REFERENCES question(questionId),
     -- Checking that there are at least 2 options is
     -- not doable without a subquery. TODO: ASK OH.
-    answerOption TEXT NOT NULL,
+    answerOption VARCHAR(255),
     isAnswer BOOLEAN NOT NULL,
-    hint TEXT,
+    PRIMARY KEY(questionId, answerOption)
+);
+
+-- This table is only for answerOptions that do have a hint,
+-- If an option does not have a hint then it should not be in
+-- this table.
+CREATE TABLE MultipleChoiceHints(
+    questionId INT REFERENCES question(questionId),
+    answerOption VARCHAR(255),
+    hint VARCHAR(255) NOT NULL,
     PRIMARY KEY(questionId, answerOption)
 );
 
 CREATE TABLE NumericQuestions(
     questionId INT REFERENCES question(questionId),
+    -- We should not enforce not null here in case
+    -- a range is x<10 or x>10 but we need the ranges
+    -- to be a part of the key to be able to identify
+    -- different answers.
     startRange INT,
     endRange INT,
-    -- If isAnswer is true then startRange and endRange must be the same.
     isAnswer BOOLEAN NOT NULL,
     CHECK startRange<=endRange,
+    -- If isAnswer is true then startRange and endRange must be the same.
     CHECK isAnswer=TRUE AND startRange=endRange,
+    PRIMARY KEY(questionId, startRange, endRange)
+);
+
+-- Same logic as MultipleChoiceHints
+CREATE TABLE NumericQuestionsHints(
+    questionId INT REFERENCES question(questionId),
+    startRange INT,
+    endRange INT,
     hint VARCHAR(255),
     PRIMARY KEY(questionId, startRange, endRange)
 );
 
+-- True or False cannot have hints.
 CREATE TABLE true_false(
     questionId INT REFERENCES question(questionId) PRIMARY KEY,
     answer BOOLEAN NOT NULL
 );
 
 CREATE TABLE studentResponse(
-    -- TODO: constrain student to only take quiz in a class they are in. 
     questionId INT REFERENCES question(questionId),
     quizid VARCHAR(255) REFERENCES quiz(quizid),
-    s_id BIGINT REFERENCES student(s_id),
+    s_id VARCHAR(10) REFERENCES student(s_id),
     -- Since we combined the answers of all question types in one table,
     -- we cannot check that the mcq answer exists as an option in the
     -- MultipleChoice table.
+    -- We allowed answer to be Null in this tables because it does tell us
+    -- that the student answered nothing. We could instead just not include
+    -- questions that the student did not answer but then we won't be able
+    -- to tell if a student took the quiz if he did not answer any questions
+    -- without performing a complicated query.  
     answer VARCHAR(255),
     questionType question_type NOT NULL,
     PRIMARY KEY(questionId, quizId, s_id)

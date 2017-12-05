@@ -15,7 +15,7 @@ CREATE TABLE q2 (
 
 CREATE VIEW NumericHintCount AS
 	SELECT questionId, count(hint) as hints
-	FROM NumericQuestions
+	FROM NumericQuestionsHints
 	GROUP BY questionId;
 
 CREATE VIEW trueFalseHintCount AS
@@ -24,7 +24,7 @@ CREATE VIEW trueFalseHintCount AS
 
 CREATE VIEW MCQHintCount AS
 	SELECT questionId, count(hint) as hints
-	FROM MultipleChoice
+	FROM MultipleChoiceHints
 	GROUP BY questionId;
 
 
@@ -38,8 +38,6 @@ CREATE VIEW countsWithText AS
 	SELECT  allCounts.questionId as questionId, LEFT(questionText, 50), hints 
 	FROM allCounts JOIN question on allCounts.questionId = question.questionId;
 
-INSERT into q2 (
-	SELECT * 
-	FROM countsWithText
-);
+SELECT * FROM countsWithText;
+
 	
