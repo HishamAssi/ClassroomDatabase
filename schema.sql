@@ -101,9 +101,9 @@ CREATE TABLE NumericQuestions(
     startRange INT,
     endRange INT,
     isAnswer BOOLEAN NOT NULL,
-    CHECK startRange<=endRange,
+    CHECK (startRange<=endRange),
     -- If isAnswer is true then startRange and endRange must be the same.
-    CHECK isAnswer=TRUE AND startRange=endRange,
+    CHECK (isAnswer=TRUE AND startRange=endRange),
     PRIMARY KEY(questionId, startRange, endRange)
 );
 
