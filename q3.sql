@@ -59,7 +59,7 @@ CREATE VIEW totalGrades AS
 
 -- Lastname
 CREATE VIEW allInfo AS
-    SELECT student.s_id as s_id, CAST(lastname AS VARCHAR[255]), totalGrade
+    SELECT student.s_id as s_id, lastname, totalGrade
     FROM 
 	(SELECT * 
 	FROM ((SELECT * FROM totalGrades) UNION (
