@@ -10,7 +10,7 @@ set search_path to quizschema;
 CREATE TABLE student(
     -- We decided to make the s_id as a varchar so we can enforce
     -- the 10 character constraint on the attribute.
-    s_id VARCHAR(10) PRIMARY KEY CHECK char_length(s_id) = 10,
+    s_id VARCHAR(10) PRIMARY KEY,
     -- The professor mentioned the rare scenario where smoeone may not
     -- have a firstname so we allowed firstname to be null.
     firstname VARCHAR(255),
@@ -33,7 +33,7 @@ CREATE TABLE class(
 );
 
 CREATE TABLE took(
-    s_id BIGINT REFERENCES student(s_id),
+    s_id VARCHAR(10) REFERENCES student(s_id),
     c_id INT REFERENCES class(c_id),
     PRIMARY KEY(s_id, c_id)
 );
