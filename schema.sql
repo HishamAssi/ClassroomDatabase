@@ -41,7 +41,7 @@ CREATE TABLE took(
 
 CREATE TABLE quiz(
     quizid VARCHAR(255) PRIMARY KEY,
-    c_Id INT REFERENCES took(c_id),
+    c_Id INT REFERENCES class(c_id),
     title VARCHAR(255),
     q_timestamp TIMESTAMP NOT NULL,
     isHint BOOLEAN NOT NULL
