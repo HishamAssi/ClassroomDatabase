@@ -149,7 +149,9 @@ CREATE TABLE studentResponse(
 \COPY question FROM 'question.csv' DELIMITER ',' CSV header;
 \COPY includes FROM 'includes.csv' DELIMITER ',' CSV header;
 \COPY MultipleChoice FROM 'MultipleChoice.csv' DELIMITER ',' CSV header;
+\COPY MultipleChoiceHints FROM 'MultipleChoice.csv' DELIMITER ',' CSV header;
 \COPY NumericQuestions FROM 'NumericQuestions.csv' DELIMITER ',' CSV header;
+\COPY NumericQuestionsHints FROM 'NumericQuestions.csv' DELIMITER ',' CSV header;
 \COPY true_false FROM 'true_false.csv' DELIMITER ',' CSV header;
 \COPY StudentResponse FROM 'StudentResponse.csv' DELIMITER ',' CSV header;
 
