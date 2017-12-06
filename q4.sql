@@ -25,7 +25,7 @@ WHERE answer IS NULL;
 CREATE VIEW allAnsweredInfo AS
 SELECT s_id, studentResponses.questionId, 
     LEFT(question.questionText, 50) AS questionText
-FROM answeredNone JOIN question 
+FROM answeredNone JOIN question
 ON studentResponses.questionId=question.questionId;
 
 SELECT * FROM allAnsweredInfo;
