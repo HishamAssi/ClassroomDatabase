@@ -47,12 +47,6 @@ questionType='MCQ' AND isAnswer=False
 AND answer=answerOption
 GROUP BY studentResponsesForQuiz.questionId;
 
-CREATE VIEW numberNone_MCQ AS
-SELECT questionId, count(*) AS noneCount
-FROM studentResponsesForQuiz
-WHERE questionType='MCQ' AND (Answer IS NULL OR answer='no response given')
-GROUP BY questionId;
-
 CREATE VIEW numberCorrect_Numeric AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
 FROM studentResponsesForQuiz JOIN NumericQuestions
@@ -69,13 +63,6 @@ questionType='Numeric' AND isAnswer=True AND answer!='no response given'
 AND cast(answer AS INT)!=startRange
 GROUP BY studentResponsesForQuiz.questionId;
 
-CREATE VIEW numberNone_Numeric AS
-SELECT questionId, count(*) AS noneCount
-FROM studentResponsesForQuiz
-WHERE questionType='Numeric' AND (Answer IS NULL OR answer='no response given')
-GROUP BY questionId;
-
-
 CREATE VIEW numberCorrect_tf AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
 FROM studentResponsesForQuiz JOIN true_false
@@ -91,12 +78,6 @@ ON studentResponsesForQuiz.questionId=true_false.questionId AND
 questionType='TF' AND studentResponsesForQuiz.answer!='no response given'
 AND cast(studentResponsesForQuiz.answer AS BOOLEAN)!=true_false.answer
 GROUP BY studentResponsesForQuiz.questionId;
-
-CREATE VIEW numberNone_tf AS
-SELECT questionId, count(*) AS noneCount
-FROM studentResponsesForQuiz
-WHERE questionType='TF' AND (Answer IS NULL OR answer='no response given')
-GROUP BY questionId;
 
 CREATE VIEW allSidnQid AS
 SELECT s_id, questionId, questionType
@@ -130,16 +111,6 @@ FROM numberIncorrect_Numeric)
 UNION
 (SELECT questionId, incorrectCount
 FROM numberIncorrect_tf);
-
--- CREATE VIEW countNone AS
--- (SELECT questionId, noneCount
--- FROM numberNone_MCQ)
--- UNION
--- (SELECT questionId, noneCount
--- FROM numberNone_Numeric)
--- UNION
--- (SELECT questionId, noneCount
--- FROM numberNone_tf);
 
 SELECT * FROM countCorrect;
 SELECT * FROM countIncorrect;
