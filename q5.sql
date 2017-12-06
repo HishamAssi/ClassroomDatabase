@@ -11,7 +11,8 @@ CREATE VIEW studentsInGrade AS
 SELECT s_Id FROM took 
 JOIN class ON took.c_id=class.c_id
 JOIN RoomTeacher ON class.room = RoomTeacher.room
-WHERE class.grade='grade 8' AND class.room='room 120' AND class.teacher='Mr Higgins';
+WHERE class.grade='grade 8' AND class.room='room 120'
+AND RoomTeacher.teacher='Mr Higgins';
 
 -- CREATE VIEW questionAnswers AS
 -- (SELECT questionsForQuiz.questionId, answerOption AS realAnswer FROM questionsForQuiz
