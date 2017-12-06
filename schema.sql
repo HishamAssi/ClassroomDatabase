@@ -33,7 +33,7 @@ CREATE TABLE class(
 CREATE TABLE class(
     -- We've included class id in order to
     -- easily join with other tables.
-    c_id PRIMARY KEY,
+    c_id INT PRIMARY KEY,
     room VARCHAR(255),
     grade VARCHAR(255),
     -- Assuming that a grade has a room 
