@@ -108,7 +108,7 @@ FROM allSidnQid LEFT JOIN studentResponsesForQuiz
 ON allSidnQid.s_id=studentResponsesForQuiz.s_id
 AND allSidnQid.questionId=studentResponsesForQuiz.questionId
 WHERE answer IS NULL
-GROUP BY questionId, questionType;
+GROUP BY allSidnQid.questionId, allSidnQid.questionType;
 
 
 CREATE VIEW countCorrect AS
