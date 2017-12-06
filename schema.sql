@@ -18,17 +18,6 @@ CREATE TABLE student(
 );
 
 
-CREATE TABLE class(
-    room VARCHAR(255) NOT NULL,
-    grade VARCHAR(255) NOT NULL,
-    -- There is a tradeoff between adding a constraint
-    -- on maximum one teacher per room and the number
-    -- of grades allowed in a room.
-    -- It is also not possible to constrain the number
-    -- of grades in a room.
-);
-
-
 
 CREATE TABLE class(
     -- We've included class id in order to
