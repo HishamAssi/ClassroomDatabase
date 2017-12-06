@@ -13,19 +13,19 @@ AND RoomTeacher.teacher='Mr Higgins';
 
 CREATE VIEW allSidnQid_ AS
 SELECT s_id, questionId, questionType
-FROM questionsForQuiz, studentsInGrade;
+FROM questionsForQuiz_, studentsInGrade_;
 
 CREATE VIEW countNone_ AS
-SELECT allSidnQid.s_id, allSidnQid.questionId
-FROM allSidnQid LEFT JOIN studentResponsesForQuiz
-ON allSidnQid.s_id=studentResponsesForQuiz.s_id
-AND allSidnQid.questionId=studentResponsesForQuiz.questionId
+SELECT allSidnQid_.s_id, allSidnQid_.questionId
+FROM allSidnQid_ LEFT JOIN studentResponsesForQuiz_
+ON allSidnQid_.s_id=studentResponsesForQuiz_.s_id
+AND allSidnQid_.questionId=studentResponsesForQuiz_.questionId
 WHERE answer IS NULL;
 
 CREATE VIEW allAnsweredInfo AS
-SELECT s_id, studentResponses.questionId, 
+SELECT s_id, countNone_.questionId, 
     LEFT(question.questionText, 50) AS questionText
-FROM answeredNone JOIN question
-ON studentResponses.questionId=question.questionId;
+FROM countNone_ JOIN question
+ON countNone_.questionId=question.questionId;
 
 SELECT * FROM allAnsweredInfo;
