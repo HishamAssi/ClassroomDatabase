@@ -1,12 +1,14 @@
 SET SEARCH_PATH TO quizschema;
 
 
+-- Get all questions id for the specific quiz.
 CREATE VIEW questionsForQuiz AS
 SELECT includes.questionId, questionType 
 FROM includes 
 JOIN question ON includes.questionId=question.questionId
 WHERE quizid='Pr1-220310';
 
+-- Get all the students in grade 8 that are in Mr Higgins Room.
 CREATE VIEW studentsInGrade AS
 SELECT s_Id FROM took 
 JOIN class ON took.c_id=class.c_id
@@ -14,23 +16,13 @@ JOIN RoomTeacher ON class.room = RoomTeacher.room
 WHERE class.grade='grade 8' AND class.room='room 120'
 AND RoomTeacher.teacher='Mr Higgins';
 
--- CREATE VIEW questionAnswers AS
--- (SELECT questionsForQuiz.questionId, answerOption AS realAnswer FROM questionsForQuiz
--- JOIN MultipleChoice ON questionsForQuiz.questionId=MultipleChoice.questionId
--- WHERE isAnswer=True) 
--- UNION
--- (SELECT questionsForQuiz.questionId, startRange AS realAnswer FROM questionsForQuiz
--- JOIN NumericQuestions ON questionsForQuiz.questionId=NumericQuestions.questionId
--- WHERE isAnswer=True)
--- UNION
--- (SELECT questionsForQuiz.questionId, answer AS realAnswer FROM questionsForQuiz
--- JOIN true_false ON questionsForQuiz.questionId=true_false.questionId);
-
+-- Get the student responses for the specific quiz.
 CREATE VIEW studentResponsesForQuiz AS
 SELECT questionId, studentsInGrade.s_id, answer, questionType FROM studentsInGrade
 JOIN studentResponse ON studentsInGrade.s_id=studentResponse.s_id
 WHERE quizid='Pr1-220310';
 
+-- the number of students that got an mcq question correct.
 CREATE VIEW numberCorrect_MCQ AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
 FROM studentResponsesForQuiz JOIN MultipleChoice
@@ -39,6 +31,7 @@ AND questionType='MCQ' AND isAnswer=True
 AND answer=answerOption
 GROUP BY studentResponsesForQuiz.questionId;
 
+-- the number of students that got an mcq question incorrect.
 CREATE VIEW numberIncorrect_MCQ AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS incorrectCount
 FROM studentResponsesForQuiz JOIN MultipleChoice
@@ -47,12 +40,7 @@ questionType='MCQ' AND isAnswer=False
 AND answer=answerOption
 GROUP BY studentResponsesForQuiz.questionId;
 
-CREATE VIEW numberNone_MCQ AS
-SELECT questionId, count(*) AS noneCount
-FROM studentResponsesForQuiz
-WHERE questionType='MCQ' AND (Answer IS NULL OR answer='no response given')
-GROUP BY questionId;
-
+-- the number of students that got a numeric question correct.
 CREATE VIEW numberCorrect_Numeric AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
 FROM studentResponsesForQuiz JOIN NumericQuestions
@@ -61,6 +49,7 @@ AND questionType='Numeric' AND isAnswer=True
 AND cast(answer AS INT)=startRange
 GROUP BY studentResponsesForQuiz.questionId;
 
+-- the number of students that got a numeric question incorrect.
 CREATE VIEW numberIncorrect_Numeric AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS incorrectCount
 FROM studentResponsesForQuiz JOIN NumericQuestions
@@ -69,13 +58,7 @@ questionType='Numeric' AND isAnswer=True AND answer!='no response given'
 AND cast(answer AS INT)!=startRange
 GROUP BY studentResponsesForQuiz.questionId;
 
-CREATE VIEW numberNone_Numeric AS
-SELECT questionId, count(*) AS noneCount
-FROM studentResponsesForQuiz
-WHERE questionType='Numeric' AND (Answer IS NULL OR answer='no response given')
-GROUP BY questionId;
-
-
+-- the number of students that got a true or false question correct.
 CREATE VIEW numberCorrect_tf AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
 FROM studentResponsesForQuiz JOIN true_false
@@ -84,6 +67,7 @@ AND questionType='TF'
 AND cast(studentResponsesForQuiz.answer AS BOOLEAN)=true_false.answer
 GROUP BY studentResponsesForQuiz.questionId;
 
+-- the number of students that got a true or false question incorrect.
 CREATE VIEW numberIncorrect_tf AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS incorrectCount
 FROM studentResponsesForQuiz JOIN true_false
@@ -92,25 +76,22 @@ questionType='TF' AND studentResponsesForQuiz.answer!='no response given'
 AND cast(studentResponsesForQuiz.answer AS BOOLEAN)!=true_false.answer
 GROUP BY studentResponsesForQuiz.questionId;
 
-CREATE VIEW numberNone_tf AS
-SELECT questionId, count(*) AS noneCount
-FROM studentResponsesForQuiz
-WHERE questionType='TF' AND (Answer IS NULL OR answer='no response given')
-GROUP BY questionId;
-
+-- All s_ids with all q_ids for the specific class and quiz.
 CREATE VIEW allSidnQid AS
 SELECT s_id, questionId, questionType
 FROM questionsForQuiz, studentsInGrade;
 
+-- The count of students that did not answer a question.
 CREATE VIEW countNone AS
-SELECT questionId, count(*)
+SELECT allSidnQid.questionId, count(*) as NoneCount
 FROM allSidnQid LEFT JOIN studentResponsesForQuiz
-ON studentsInGrade.s_id=studentResponse.s_id
-AND studentsInGrade.questionId=studentResponse.questionId
+ON allSidnQid.s_id=studentResponsesForQuiz.s_id
+AND allSidnQid.questionId=studentResponsesForQuiz.questionId
 WHERE answer IS NULL
-GROUP BY questionId, questionType;
+GROUP BY allSidnQid.questionId, allSidnQid.questionType;
 
-
+-- Unioning the correct answers of the different types
+-- of questions.
 CREATE VIEW countCorrect AS
 (SELECT questionId, correctCount
 FROM numberCorrect_MCQ)
@@ -121,6 +102,8 @@ UNION
 (SELECT questionId, correctCount
 FROM numberCorrect_tf);
 
+-- Unioning the incorrect answers of the different types
+-- of questions.
 CREATE VIEW countIncorrect AS
 (SELECT questionId, incorrectCount
 FROM numberIncorrect_MCQ)
@@ -130,16 +113,6 @@ FROM numberIncorrect_Numeric)
 UNION
 (SELECT questionId, incorrectCount
 FROM numberIncorrect_tf);
-
--- CREATE VIEW countNone AS
--- (SELECT questionId, noneCount
--- FROM numberNone_MCQ)
--- UNION
--- (SELECT questionId, noneCount
--- FROM numberNone_Numeric)
--- UNION
--- (SELECT questionId, noneCount
--- FROM numberNone_tf);
 
 SELECT * FROM countCorrect;
 SELECT * FROM countIncorrect;
