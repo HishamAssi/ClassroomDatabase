@@ -17,9 +17,9 @@ FROM questionsForQuiz_, studentsInGrade_;
 
 CREATE VIEW countNone_ AS
 SELECT allSidnQid_.s_id, allSidnQid_.questionId
-FROM allSidnQid_ LEFT JOIN studentResponsesForQuiz_
-ON allSidnQid_.s_id=studentResponsesForQuiz_.s_id
-AND allSidnQid_.questionId=studentResponsesForQuiz_.questionId
+FROM allSidnQid_ LEFT JOIN studentResponses
+ON allSidnQid_.s_id=studentResponses.s_id
+AND allSidnQid_.questionId=studentResponses.questionId
 WHERE answer IS NULL;
 
 CREATE VIEW allAnsweredInfo AS
