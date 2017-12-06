@@ -2,12 +2,15 @@ SET SEARCH_PATH TO quizschema;
 
 
 CREATE VIEW questionsForQuiz AS
-SELECT includes.questionId, questionType FROM includes 
+SELECT includes.questionId, questionType 
+FROM includes 
 JOIN question ON includes.questionId=question.questionId
 WHERE quizid='Pr1-220310';
 
 CREATE VIEW studentsInGrade AS
-SELECT s_Id FROM took JOIN class ON took.c_id=class.c_id
+SELECT s_Id FROM took 
+JOIN class ON took.c_id=class.c_id
+JOIN RoomTeacher ON class.room = RoomTeacher.room
 WHERE class.grade='grade 8' AND class.room='room 120' AND class.teacher='Mr Higgins';
 
 -- CREATE VIEW questionAnswers AS
@@ -94,6 +97,18 @@ FROM studentResponsesForQuiz
 WHERE questionType='TF' AND (Answer IS NULL OR answer='no response given')
 GROUP BY questionId;
 
+CREATE VIEW allSidnQid AS
+SELECT s_id, questionId, questionType
+FROM questionsForQuiz, studentsInGrade
+
+CREATE VIEW countNones AS
+SELECT questionId, count(*)
+FROM allSidnQid LEFT JOIN studentResponsesForQuiz
+ON studentsInGrade.s_id=studentResponse.s_id
+AND studentsInGrade.questionId=studentResponse.questionId
+WHERE answer IS NULL
+GROUP BY questionId, questionType;
+
 
 CREATE VIEW countCorrect AS
 (SELECT questionId, correctCount
@@ -115,15 +130,15 @@ UNION
 (SELECT questionId, incorrectCount
 FROM numberIncorrect_tf);
 
-CREATE VIEW countNone AS
-(SELECT questionId, noneCount
-FROM numberNone_MCQ)
-UNION
-(SELECT questionId, noneCount
-FROM numberNone_Numeric)
-UNION
-(SELECT questionId, noneCount
-FROM numberNone_tf);
+-- CREATE VIEW countNone AS
+-- (SELECT questionId, noneCount
+-- FROM numberNone_MCQ)
+-- UNION
+-- (SELECT questionId, noneCount
+-- FROM numberNone_Numeric)
+-- UNION
+-- (SELECT questionId, noneCount
+-- FROM numberNone_tf);
 
 SELECT * FROM countCorrect;
 SELECT * FROM countIncorrect;
