@@ -13,11 +13,14 @@ CREATE TABLE q3 (
     totalGrade INT NOT NULL
 );
  
+-- Get all the students in this class 
 CREATE VIEW students120 AS
      SELECT s_id 
-     FROM class JOIN took ON class.c_id = took.c_id
-     WHERE room = 'room 120' AND grade = 'grade 8' 
-         AND teacher = 'Mr Higgins';
+     FROM (class JOIN roomTeacher ON 
+	 	class.room = roomTeacher.room AND class.room = 'room 120' AND
+		teacher = 'Mr Higgins') classroom 
+	JOIN took ON classroom.c_id = took.c_id;
+     
  
 -- Responses of students in the room 120 grade 8, taking this quiz
 CREATE VIEW Responses120 AS
@@ -27,12 +30,12 @@ CREATE VIEW Responses120 AS
          
 -- CORRECT responses 
 CREATE VIEW correctResponses AS
-     SELECT s_id, questionid,  quizid
+     SELECT s_id, questionid,  quizid, answer
      FROM Responses120 sr
      WHERE (sr.questionType = 'MCQ' AND sr.answer IN 
          (SELECT answer
           FROM MultipleChoice 
-          WHERE sr.questionid = questionid AND isAnswer=true))
+          WHERE sr.questionid = questionid AND sr.answer = answeroption AND isAnswer=true))
      OR (sr.questionType = 'Numeric' AND CAST(sr.answer AS INT)  IN 
          (SELECT startRange
           FROM NumericQuestions 
@@ -46,7 +49,7 @@ CREATE VIEW correctResponses AS
 -- Students that got nothing correct 
 CREATE VIEW noResponse AS 
     SELECT cr.s_id as s_id, 0 as totalGrade
-    FROM ((SELECT DISTINCT s_id FROM StudentResponse WHERE quizid = 'Pr1-220310') 
+    FROM ((SELECT DISTINCT s_id FROM students120) -- All students in the class
     except
     (SELECT DISTINCT s_id FROM correctResponses WHERE quizid = 'Pr1-220310') ) AS cr ; 
 
