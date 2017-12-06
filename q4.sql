@@ -23,7 +23,7 @@ AND allSidnQid_.questionId=studentResponsesForQuiz_.questionId
 WHERE answer IS NULL;
 
 CREATE VIEW allAnsweredInfo AS
-SELECT s_id, studentResponses.questionId, 
+SELECT s_id, countNone_.questionId, 
     LEFT(question.questionText, 50) AS questionText
 FROM countNone_ JOIN question
 ON countNone_.questionId=question.questionId;
