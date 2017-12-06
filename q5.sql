@@ -100,9 +100,9 @@ GROUP BY questionId;
 
 CREATE VIEW allSidnQid AS
 SELECT s_id, questionId, questionType
-FROM questionsForQuiz, studentsInGrade
+FROM questionsForQuiz, studentsInGrade;
 
-CREATE VIEW countNones AS
+CREATE VIEW countNone AS
 SELECT questionId, count(*)
 FROM allSidnQid LEFT JOIN studentResponsesForQuiz
 ON studentsInGrade.s_id=studentResponse.s_id
