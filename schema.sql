@@ -10,7 +10,7 @@ set search_path to quizschema;
 CREATE TABLE student(
     -- We decided to make the s_id as a varchar so we can enforce
     -- the 10 character constraint on the attribute.
-    s_id VARCHAR(10) PRIMARY KEY,
+    s_id VARCHAR(10) PRIMARY KEY CHECK(CHAR_LENGTH(s_id) = 10),
     -- The professor mentioned the rare scenario where smoeone may not
     -- have a firstname so we allowed firstname to be null.
     firstname VARCHAR(255),
@@ -19,17 +19,30 @@ CREATE TABLE student(
 
 
 CREATE TABLE class(
-    c_id SERIAL PRIMARY KEY,
     room VARCHAR(255) NOT NULL,
     grade VARCHAR(255) NOT NULL,
-    teacher VARCHAR(255) NOT NULL,
     -- There is a tradeoff between adding a constraint
     -- on maximum one teacher per room and the number
     -- of grades allowed in a room.
     -- It is also not possible to constrain the number
     -- of grades in a room.
-    UNIQUE(room, grade, teacher)
-    
+);
+
+
+
+CREATE TABLE class(
+    -- We've included class id in order to
+    -- easily join with other tables.
+    c_id PRIMARY KEY,
+    room VARCHAR(255),
+    grade VARCHAR(255),
+    -- Assuming that a grade has a room 
+    UNIQUE(room, grade)
+);
+
+CREATE TABLE RoomTeacher(
+    room VARCHAR(255) PRIMARY KEY,
+    teacher VARCHAR(255)
 );
 
 CREATE TABLE took(
@@ -133,14 +146,15 @@ CREATE TABLE studentResponse(
     -- that the student answered nothing. We could instead just not include
     -- questions that the student did not answer but then we won't be able
     -- to tell if a student took the quiz if he did not answer any questions
-    -- without performing a complicated query.  
-    answer VARCHAR(255),
+    -- without performing a complicated query.
+    answer VARCHAR(255) NOT NULL,
     questionType question_type NOT NULL,
     PRIMARY KEY(questionId, quizId, s_id)
 );
 
 \COPY student FROM 'student.csv' DELIMITER ',' CSV header;
 \COPY class FROM 'class.csv' DELIMITER ',' CSV header;
+\COPY RoomTeacher FROM 'RoomTeacher.csv' DELIMITER ',' CSV header;
 \COPY took FROM 'took.csv' DELIMITER ',' CSV header;
 \COPY quiz FROM 'quiz.csv' DELIMITER ',' CSV header;
 \COPY question FROM 'question.csv' DELIMITER ',' CSV header;
