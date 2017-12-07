@@ -45,8 +45,8 @@ CREATE VIEW numberCorrect_Numeric AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS correctCount
 FROM studentResponsesForQuiz JOIN NumericQuestions
 ON studentResponsesForQuiz.questionId=NumericQuestions.questionId
-AND questionType='Numeric' AND isAnswer=True 
-AND cast(answer AS INT)=startRange
+AND questionType='Numeric' 
+AND cast(studentResponsesForQuiz.answer AS INT)= NumericQuestions.answer
 GROUP BY studentResponsesForQuiz.questionId;
 
 -- the number of students that got a numeric question incorrect.
@@ -54,8 +54,8 @@ CREATE VIEW numberIncorrect_Numeric AS
 SELECT studentResponsesForQuiz.questionId, count(*) AS incorrectCount
 FROM studentResponsesForQuiz JOIN NumericQuestions
 ON studentResponsesForQuiz.questionId=NumericQuestions.questionId AND
-questionType='Numeric' AND isAnswer=True AND answer!='no response given'
-AND cast(answer AS INT)!=startRange
+questionType='Numeric'  AND studentResponsesForQuiz.answer!='no response given'
+AND cast(studentResponsesForQuiz.answer AS INT)!= NumericQuestions.answer
 GROUP BY studentResponsesForQuiz.questionId;
 
 -- the number of students that got a true or false question correct.
