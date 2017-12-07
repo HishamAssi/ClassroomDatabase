@@ -2,11 +2,34 @@ drop schema if exists quizschema cascade;
 create schema quizschema;
 set search_path to quizschema;
 
--- TODO: create our own FD? If not, how can we have redundancy?
--- TODO: query vs select for q1-q5.
--- TODO: MCQ having at least 2 options.
+-- Contraints that could not be enforced: 
+	
+-- Constraints that could be (but were not) enforced:
+       -- (1) MCQ having atleast 2 options:
+           -- Enforcing this constraint would have resulted in
+	   -- a redundant table. We could have had a relation
+	   -- between each answer and an arbitrary option. However
+	   -- this does not give us any new facts about the domain
+	   -- and takes up more space, without much added value. 
+       -- (2) At least one question per quiz:
+	   -- We could have implemented a circular reference, but we 
+	   -- read on the FAQ that we have the option to OPT OUT of 
+	   -- using this. 
+       -- (3) At least one student per class:
+	   -- Similarly to the question the above, we opted out of 
+	   -- using the circular refernces
+      -- (4) Student can only take a quiz that was assigned to their class
+	   -- We could include the class_id in the Studentresponse table
+	   -- and have a reference to the Quiz(quizId, classId) and then 
+	   -- ensured that neither our quizId or classId were NULL.
+	   -- We did not do this because it would have introduced a lot
+	   -- of redundancy. Our Took Table already includes the class to
+	   -- student relation, and the quiz table already includes the 
+	   -- quiz to class relation. We would not be introducing facts
+	   -- any new facts if we included the class id. We would actually
+	   -- be repeating information that is already known (redundantly).		
 
-
+-- Student table with their respective ids and names
 CREATE TABLE student(
     -- We decided to make the s_id as a varchar so we can enforce
     -- the 10 character constraint on the attribute.
@@ -18,10 +41,10 @@ CREATE TABLE student(
 );
 
 
-
+-- The class as it is defined by the grade and room
+	-- A class_id has been added for practical joining with
+	-- other tables
 CREATE TABLE class(
-    -- We've included class id in order to
-    -- easily join with other tables.
     c_id INT PRIMARY KEY,
     room VARCHAR(255),
     grade VARCHAR(255),
@@ -29,52 +52,69 @@ CREATE TABLE class(
     UNIQUE(room, grade)
 );
 
+
+-- The rooms, as associated with teachers
+-- Enforcing the constraint of only having 
+-- one teacher per room
 CREATE TABLE RoomTeacher(
     room VARCHAR(255) PRIMARY KEY,
     teacher VARCHAR(255)
 );
 
+-- The Took relation to associate students and classes
 CREATE TABLE took(
     s_id VARCHAR(10) REFERENCES student(s_id),
     c_id INT REFERENCES class(c_id),
     PRIMARY KEY(s_id, c_id)
 );
 
-
+-- The Quiz Table and the class it is associated with.
+-- We could have made a relation between class and quiz,
+-- but since a quiz can only belong to one class we decided 
+-- to merge them into one.
 CREATE TABLE quiz(
     quizid VARCHAR(255) PRIMARY KEY,
+    -- The class to which this quiz is assigned to
     c_Id INT REFERENCES class(c_id),
     title VARCHAR(255),
     q_timestamp TIMESTAMP NOT NULL,
+    -- The flag to determine whether or not
+    -- we are including hints for this quiz
     isHint BOOLEAN NOT NULL
 );
 
--- Created a type for the question types so we
+-- Question Types
+-- We created a type for the question types so we
 -- dont have varying versions of them.
 -- i.e. MCQ vs MultipleChoice.
 CREATE TYPE question_type AS ENUM(
 	'MCQ', 'Numeric', 'TF');
 
+-- The questions as they relate to their prompts and types
 CREATE TABLE question(
     questionId INT PRIMARY KEY,
     questionText VARCHAR(255) NOT NULL,
+    -- The type of the question is an ENUM of either 
+    -- MCQ, Numeric, TF
     questionType question_type NOT NULL
 );
 
+-- The relation to associate the questions that each quiz includes
+-- and their respective weights
 CREATE TABLE includes(
     -- We cannot enforce at least one question per quiz because
     -- quizId is a subset of the quiz(quizId) so it might
-    -- be that quiz does not include any questions if it
-    -- does not exist in this table.
+    -- be that quiz does not include any questions
     quizid VARCHAR(255) REFERENCES quiz(quizid),
     questionid INT REFERENCES question(questionid),
     q_weight INT NOT NULL,
     PRIMARY KEY(quizid, questionid)
 );
 
--- It might be better to keep the hints in the same table as MultipleChoice
--- but for the since this assignment does not allow us to have nulls,
--- we have to split the hints into a different table.
+-- The answer options for the Multiple Choice questions
+	-- It might have been better to keep the hints in the same table as MultipleChoice
+	-- But since this assignment does not allow us to have nulls, we have included a relation
+	-- to associate the hints with the options
 CREATE TABLE MultipleChoice(
     questionId INT REFERENCES question(questionId),
     -- Checking that there are at least 2 options is
@@ -94,36 +134,38 @@ CREATE TABLE MultipleChoiceHints(
     PRIMARY KEY(questionId, answerOption)
 );
 
+-- Numeric Questions and their answers 
 CREATE TABLE NumericQuestions(
-    questionId INT REFERENCES question(questionId),
-    -- We should not enforce not null here in case
-    -- a range is x<10 or x>10 but we need the ranges
-    -- to be a part of the key to be able to identify
-    -- different answers.
-    startRange INT,
-    endRange INT,
-    isAnswer BOOLEAN NOT NULL,
-    --CHECK (startRange<=endRange),
-    -- If isAnswer is true then startRange and endRange must be the same.
-    --CHECK (isAnswer=TRUE AND startRange=endRange),
-    PRIMARY KEY(questionId, startRange, endRange)
+    questionId INT PRIMARY KEY,
+    -- The domain specifies an "Integer" answer,
+    -- Therefore, a range is not an answer. 
+    answer INT NOT NULL,
+    FOREIGN KEY (questionId) REFERENCES question(questionId) 
 );
 
--- Same logic as MultipleChoiceHints
+-- The relation between the question and its hints. 
+-- ASSUMPTION: there is a hint IFF there is a range associated
+	       -- with it
 CREATE TABLE NumericQuestionsHints(
     questionId INT REFERENCES question(questionId),
+    -- The start range upon which a hint must be displayed
     startRange INT,
+    -- End range for this hint
     endRange INT,
-    hint VARCHAR(255),
+    hint VARCHAR(255) NOT NULL,
     PRIMARY KEY(questionId, startRange, endRange)
 );
 
--- True or False cannot have hints.
+-- The answers to all the true_false questions 
 CREATE TABLE true_false(
     questionId INT REFERENCES question(questionId) PRIMARY KEY,
+    -- True or False cannot have hints.
+    -- Each question must have an answer
     answer BOOLEAN NOT NULL
 );
 
+-- The ternary relation to associate the student's responses to questions
+-- on the quizes they take.
 CREATE TABLE studentResponse(
     questionId INT REFERENCES question(questionId),
     quizid VARCHAR(255) REFERENCES quiz(quizid),
