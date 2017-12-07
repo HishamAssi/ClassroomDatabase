@@ -1,5 +1,2 @@
-questionId,startRange,endRange,isAnswer
-601,1960,1960,True
-601,1800,1900,False
-601,2000,2010,False
-601,2020,3000,False
+questionId, answer
+601,1960
