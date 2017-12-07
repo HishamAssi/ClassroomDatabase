@@ -183,20 +183,6 @@ CREATE TABLE studentResponse(
     PRIMARY KEY(questionId, quizId, s_id)
 );
 
-\COPY student FROM 'student.csv' DELIMITER ',' CSV header;
-\COPY class FROM 'class.csv' DELIMITER ',' CSV header;
-\COPY RoomTeacher FROM 'RoomTeacher.csv' DELIMITER ',' CSV header;
-\COPY took FROM 'took.csv' DELIMITER ',' CSV header;
-\COPY quiz FROM 'quiz.csv' DELIMITER ',' CSV header;
-\COPY question FROM 'question.csv' DELIMITER ',' CSV header;
-\COPY includes FROM 'includes.csv' DELIMITER ',' CSV header;
-\COPY MultipleChoice FROM 'MultipleChoice.csv' DELIMITER ',' CSV header;
-\COPY MultipleChoiceHints FROM 'MultipleChoiceHints.csv' DELIMITER ',' CSV header;
-\COPY NumericQuestions FROM 'NumericQuestions.csv' DELIMITER ',' CSV header;
-\COPY NumericQuestionsHints FROM 'NumericQuestionsHints.csv' DELIMITER ',' CSV header;
-\COPY true_false FROM 'true_false.csv' DELIMITER ',' CSV header;
-\COPY StudentResponse FROM 'StudentResponse.csv' DELIMITER ',' CSV header;
-
 
 
 
