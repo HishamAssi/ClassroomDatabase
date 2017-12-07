@@ -71,9 +71,9 @@ INSERT INTO NumericQuestionsHints VALUES
 INSERT INTO true_false VALUES
 (566, False);
 
-INSERT INTO studentResponse
+INSERT INTO studentResponse VALUES
 (601,'Pr1-220310','0998801234',1950,'Numeric'),
-(566,'Pr1-220310','0998801234',FALSE,'TF')
+(566,'Pr1-220310','0998801234',FALSE,'TF'),
 (790,'Pr1-220310','0998801234','They expanded their defence system, including Fort York','MCQ'),
 (625,'Pr1-220310','0998801234','A network used by slaves who escaped the United States into Canada','MCQ'),
 (601,'Pr1-220310','0010784522',1960,'Numeric'),
