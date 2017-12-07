@@ -37,9 +37,9 @@ CREATE VIEW correctResponses AS
           FROM MultipleChoice 
           WHERE sr.questionid = questionid AND sr.answer = answeroption AND isAnswer=true))
      OR (sr.questionType = 'Numeric' AND CAST(sr.answer AS INT)  IN 
-         (SELECT startRange
+         (SELECT answer
           FROM NumericQuestions 
-          WHERE sr.questionid = questionid AND isAnswer=true))
+          WHERE sr.questionid = questionid ))
      OR  (sr.questionType = 'TF' AND CAST(sr.answer AS BOOLEAN) IN 
          (SELECT answer
           FROM true_false 
